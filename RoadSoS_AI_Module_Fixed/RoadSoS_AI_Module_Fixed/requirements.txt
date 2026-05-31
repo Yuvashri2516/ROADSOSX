@@ -1,0 +1,6 @@
+flask
+opencv-python
+numpy
+ultralytics
+pillow
+mediapipe==0.10.35

@@ -1,0 +1,23 @@
+# Environment variables (NEVER commit this)
+.env
+.env.local
+.env.*.local
+
+# Go build outputs
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+/tmp
+
+# Go test cache
+*.test
+*.out
+
+# VS Code settings
+.vscode/
+
+# Go module cache
+vendor/
+go.sum
