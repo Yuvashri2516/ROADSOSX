@@ -346,6 +346,7 @@ void setup() {
 
   // ── WebSocket Connect ──
   ws.begin(WS_HOST, WS_PORT, WS_PATH);
+  ws.setExtraHeaders("Authorization: Bearer YOUR_VEHICLE_JWT_TOKEN\r\n");
   ws.onEvent(webSocketEvent);
   ws.setReconnectInterval(3000);
 

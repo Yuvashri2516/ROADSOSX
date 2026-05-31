@@ -31,7 +31,7 @@ import platform
 CAM_BACKEND = cv2.CAP_DSHOW if platform.system() == 'Windows' else cv2.CAP_ANY
 
 from object_detector import ObjectDetector
-# from driver_monitor   import DriverMonitor
+from driver_monitor   import DriverMonitor
 from lane_detector    import LaneDetector
 from risk_engine      import RiskEngine
 from telemetry_client import TelemetryClient
@@ -60,7 +60,7 @@ async def main():
 
     # ── Initialize all modules ──────────────────────────────
     detector = ObjectDetector(model_path=args.yolo_model)
-    # driver   = DriverMonitor()
+    driver   = DriverMonitor()
     lane     = LaneDetector(departure_threshold_px=60)
     risk     = RiskEngine()
     client   = TelemetryClient(uri=args.backend_url)
@@ -132,8 +132,7 @@ async def main():
 
             detection_result = detector.detect(road_frame)
             lane_result      = lane.detect(road_frame)
-            # driver_result    = driver.analyze(driver_frame)
-            driver_result    = {"driver_status": "MODULE DISABLED", "ear_score": None, "alert_required": False}
+            driver_result    = driver.analyze(driver_frame)
 
             t_ai_end         = time.perf_counter()
             processing_ms    = (t_ai_end - t_ai_start) * 1000
@@ -166,10 +165,10 @@ async def main():
             if not args.no_display:
                 road_annotated   = detector.annotate_frame(road_frame, detection_result)
                 road_annotated   = lane.annotate_frame(road_annotated, lane_result)
-                # driver_annotated = driver.annotate_frame(driver_frame, driver_result)
+                driver_annotated = driver.annotate_frame(driver_frame, driver_result)
 
                 cv2.imshow("RoadSoS X — Road View", road_annotated)
-                # cv2.imshow("RoadSoS X — Driver View", driver_annotated)
+                cv2.imshow("RoadSoS X — Driver View", driver_annotated)
 
                 key = cv2.waitKey(1) & 0xFF
                 if key == ord('q'):
@@ -189,7 +188,7 @@ async def main():
         driver_cap.release()
         cv2.destroyAllWindows()
         await client.close()
-        # driver.close()
+        driver.close()
         print("[Main] RoadSoS X AI Engine stopped.")
 
 

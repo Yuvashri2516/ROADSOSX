@@ -1,22 +1,40 @@
 version: '3.8'
 
 services:
-  # Member 4: Backend API & WebSocket Hub
+  # Database: PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: roadsos_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: roadsos
+      POSTGRES_PASSWORD: roadsos_password
+      POSTGRES_DB: roadsos_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # Backend Gateway
   backend:
     build:
-      context: ./backend
+      context: ./backend-gateway
       dockerfile: Dockerfile
     container_name: roadsos_backend
     ports:
       - "8000:8000"
     volumes:
-      - ./backend:/app
-      - ./emergency-intelligence:/emergency-intelligence
+      - ./backend-gateway:/app
+      - ./emergency-engine:/emergency-engine
     environment:
       - PYTHONUNBUFFERED=1
+      - DATABASE_URL=postgresql://roadsos:roadsos_password@db:5432/roadsos_db
+      - JWT_SECRET=supersecret_roadsos_key_2026
+    depends_on:
+      - db
     restart: unless-stopped
 
-  # Member 6: Web Dashboard
+  # Web Dashboard
   dashboard:
     build:
       context: ./dashboard
@@ -33,3 +51,6 @@ services:
     depends_on:
       - backend
     restart: unless-stopped
+
+volumes:
+  pgdata:

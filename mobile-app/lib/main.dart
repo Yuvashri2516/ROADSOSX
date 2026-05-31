@@ -6,15 +6,22 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 import 'providers/telemetry_provider.dart';
+import 'providers/auth_provider.dart';
 import 'screens/dashboard_screen.dart';
 import 'screens/sos_screen.dart';
 import 'screens/map_screen.dart';
 import 'screens/settings_screen.dart';
+import 'screens/login_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final authProvider = AuthProvider();
+  await authProvider.init();
+
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider.value(value: authProvider),
         ChangeNotifierProvider(create: (_) => TelemetryProvider()),
       ],
       child: const RoadSoSApp(),
@@ -31,14 +38,18 @@ class RoadSoSApp extends StatelessWidget {
       title: 'RoadSoS X',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF0EA5E9),
-          brightness: Brightness.light,
-        ),
+        brightness: Brightness.dark,
+        primaryColor: const Color(0xFF3B82F6),
+        scaffoldBackgroundColor: const Color(0xFF0F172A),
+        cardColor: const Color(0xFF1E293B),
         textTheme: GoogleFonts.interTextTheme(),
         useMaterial3: true,
       ),
-      home: const MainShell(),
+      home: Consumer<AuthProvider>(
+        builder: (context, auth, _) {
+          return auth.isAuthenticated ? const MainShell() : LoginScreen();
+        },
+      ),
     );
   }
 }

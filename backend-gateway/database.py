@@ -2,8 +2,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 import os
 
-# Use SQLite for local development if POSTGRES_URL is not set
-SQLALCHEMY_DATABASE_URL = os.getenv("POSTGRES_URL", "sqlite:///./roadsos.db")
+# Use SQLite for local development if DATABASE_URL is not set
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://roadsos:roadsos_password@localhost:5432/roadsos_db")
 
 if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
     engine = create_engine(
