@@ -34,7 +34,6 @@ jobs:
       env:
         DATABASE_URL: "sqlite:///./test.db"
         JWT_SECRET: "ci_testing_secret_key"
-      working-directory: .
       run: pytest tests/ -v --tb=short
 
   # ─────────────────────────────────────────────
@@ -68,3 +67,4 @@ jobs:
       env:
         NEXT_PUBLIC_API_URL: "http://localhost:8000"
         NEXT_PUBLIC_WS_URL: "ws://localhost:8000"
+        NEXT_TELEMETRY_DISABLED: "1"
