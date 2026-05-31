@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import type {
   VehicleTelemetry,
   AIAlert,
@@ -23,6 +24,7 @@ interface SocketContextValue {
 const SocketContext = createContext<SocketContextValue | null>(null);
 
 export function SocketProvider({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth();
   const [telemetry, setTelemetry] = useState<VehicleTelemetry | null>(null);
   const [aiStatus, setAiStatus]   = useState<AIStatus | null>(null);
   const [alerts, setAlerts]       = useState<AIAlert[]>([]);
@@ -167,10 +169,14 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
   }, [addAlert]);
 
   const triggerSOS = useCallback(async () => {
+    if (!user?.token) return;
     try {
-      await fetch('http://localhost:8000/incidents/', {
+      await fetch('http://localhost:8000/api/sos', {
         method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        },
         body: JSON.stringify({
           title:       'Manual SOS Trigger',
           description: 'Driver manually triggered SOS via dashboard',

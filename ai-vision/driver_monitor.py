@@ -46,13 +46,19 @@ class DriverMonitor:
     def __init__(self):
         """Initialize MediaPipe Face Mesh for driver monitoring."""
         print("[DriverMonitor] Initializing MediaPipe Face Mesh...")
-        self.mp_face_mesh = mp.solutions.face_mesh
-        self.face_mesh = self.mp_face_mesh.FaceMesh(
-            max_num_faces=1,
-            refine_landmarks=True,
-            min_detection_confidence=0.5,
-            min_tracking_confidence=0.5
-        )
+        self.mock_mode = False
+        try:
+            self.mp_face_mesh = mp.solutions.face_mesh
+            self.face_mesh = self.mp_face_mesh.FaceMesh(
+                max_num_faces=1,
+                refine_landmarks=True,
+                min_detection_confidence=0.5,
+                min_tracking_confidence=0.5
+            )
+        except AttributeError:
+            print("[DriverMonitor] MediaPipe solutions API not found (likely Python 3.12+ issue). Using mock mode.")
+            self.mock_mode = True
+            
         self.consec_frames = 0
         print("[DriverMonitor] Ready.")
 
@@ -61,6 +67,14 @@ class DriverMonitor:
         Analyze a single driver-facing camera frame.
         Returns structured driver monitoring data.
         """
+        if self.mock_mode:
+            return {
+                "driver_status": "ALERT (MOCK)",
+                "ear_score": 0.35,
+                "alert_required": False,
+                "consecutive_closed_frames": 0,
+            }
+
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         results = self.face_mesh.process(rgb)
 
@@ -137,4 +151,5 @@ class DriverMonitor:
         return annotated
 
     def close(self):
-        self.face_mesh.close()
+        if not self.mock_mode and hasattr(self, 'face_mesh'):
+            self.face_mesh.close()

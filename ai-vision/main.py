@@ -184,8 +184,8 @@ async def main():
         print("\n[Main] Interrupted by user. Shutting down...")
 
     finally:
-        road_cap.release()
-        driver_cap.release()
+        if 'road_cap' in locals() and road_cap.isOpened():
+            road_cap.release()
         cv2.destroyAllWindows()
         await client.close()
         driver.close()
