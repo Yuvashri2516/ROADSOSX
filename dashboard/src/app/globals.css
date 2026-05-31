@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: #F7F9FC;
+  color: #2D3748;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-image: radial-gradient(circle at 15% 50%, rgba(74, 144, 226, 0.04), transparent 25%),
+                    radial-gradient(circle at 85% 30%, rgba(32, 201, 151, 0.04), transparent 25%);
+}
+
+/* ─── Custom Scrollbar (light) ──────────────────────────────── */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* ─── Tabular numbers ─────────────── */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Utilities ─────────────── */
+@layer utilities {
+  .soft-card {
+    @apply bg-white/70 backdrop-blur-xl rounded-2xl shadow-card border border-white/50 transition-all duration-300;
+  }
+
+  .soft-card:hover {
+    @apply shadow-card-hover bg-white/90 border-white/80;
+  }
+  
+  .glass-panel {
+    @apply bg-white/60 backdrop-blur-2xl border border-white/60 shadow-glass rounded-3xl;
+  }
+
+  .badge-blue {
+    @apply bg-blue-50/80 text-primary-blue border border-blue-100/50 text-xs font-medium px-3 py-1 rounded-full backdrop-blur-sm;
+  }
+
+  .badge-green {
+    @apply bg-emerald-50/80 text-primary-teal border border-emerald-100/50 text-xs font-medium px-3 py-1 rounded-full backdrop-blur-sm;
+  }
+
+  .badge-red {
+    @apply bg-red-50/80 text-sos-red border border-red-100/50 text-xs font-medium px-3 py-1 rounded-full backdrop-blur-sm;
+  }
+
+  .badge-amber {
+    @apply bg-amber-50/80 text-warn-amber border border-amber-100/50 text-xs font-medium px-3 py-1 rounded-full backdrop-blur-sm;
+  }
+
+  /* Parallax layers */
+  .parallax-container {
+    perspective: 1000px;
+    transform-style: preserve-3d;
+  }
+
+  .parallax-slow {
+    will-change: transform;
+    transition: transform 0.1s ease-out;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-blue to-primary-teal;
+  }
+}
