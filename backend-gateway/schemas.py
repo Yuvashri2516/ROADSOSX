@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 from typing import List, Optional
 from datetime import datetime
 
@@ -11,12 +11,10 @@ class UserCreate(UserBase):
     password: str
 
 class UserResponse(UserBase):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     is_active: bool
     created_at: datetime
-
-    class Config:
-        from_attributes = True
 
 class UserLogin(BaseModel):
     email: EmailStr
@@ -32,11 +30,9 @@ class EmergencyContactCreate(EmergencyContactBase):
     pass
 
 class EmergencyContactResponse(EmergencyContactBase):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     user_id: int
-
-    class Config:
-        from_attributes = True
 
 # VEHICLE SCHEMAS
 class VehicleBase(BaseModel):
@@ -47,11 +43,9 @@ class VehicleCreate(VehicleBase):
     pass
 
 class VehicleResponse(VehicleBase):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     owner_id: int
-
-    class Config:
-        from_attributes = True
 
 # LOCATION SCHEMAS
 class LocationBase(BaseModel):
@@ -63,12 +57,10 @@ class LocationCreate(LocationBase):
     vehicle_id: int
 
 class LocationResponse(LocationBase):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     vehicle_id: int
     timestamp: datetime
-
-    class Config:
-        from_attributes = True
 
 # RISK REPORT SCHEMAS
 class RiskReportBase(BaseModel):
@@ -80,12 +72,10 @@ class RiskReportCreate(RiskReportBase):
     vehicle_id: int
 
 class RiskReportResponse(RiskReportBase):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     vehicle_id: int
     timestamp: datetime
-
-    class Config:
-        from_attributes = True
 
 # INCIDENT SCHEMAS
 class IncidentBase(BaseModel):
@@ -99,11 +89,9 @@ class IncidentCreate(IncidentBase):
     vehicle_id: int
 
 class IncidentResponse(IncidentBase):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     resolved: bool
     timestamp: datetime
     owner_id: int
     vehicle_id: int
-
-    class Config:
-        from_attributes = True
